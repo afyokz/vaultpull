@@ -61,3 +61,20 @@ func TestWrite_FilePermissions(t *testing.T) {
 		t.Errorf("expected file mode 0600, got %v", info.Mode().Perm())
 	}
 }
+
+func TestWrite_EmptySecrets(t *testing.T) {
+	tmp := filepath.Join(t.TempDir(), ".env")
+	_ = os.WriteFile(tmp, []byte("KEEP=value\n"), 0600)
+
+	if err := Write(tmp, map[string]string{}); err != nil {
+		t.Fatalf("unexpected error writing empty secrets: %v", err)
+	}
+
+	result, err := readEnvFile(tmp)
+	if err != nil {
+		t.Fatalf("failed to read back env file: %v", err)
+	}
+	if result["KEEP"] != "value" {
+		t.Errorf("expected KEEP=value to be preserved, got %s", result["KEEP"])
+	}
+}
