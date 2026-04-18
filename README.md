@@ -33,6 +33,7 @@ vaultpull --addr https://vault.example.com \
 | `--path` | Secret path to pull from | *(required)* |
 | `--out` | Output `.env` file path | `.env` |
 | `--merge` | Merge with existing `.env` instead of overwriting | `false` |
+| `--prefix` | Add a prefix to all exported variable names | *(none)* |
 
 **Example output (`.env`):**
 ```
