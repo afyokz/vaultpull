@@ -37,6 +37,24 @@ func ParseSchemaRule(raw string) (SchemaRule, error) {
 	return SchemaRule{Key: key, Pattern: re, Required: required}, nil
 }
 
+// ParseSchemaRules parses multiple rule strings and returns all rules or all errors encountered.
+func ParseSchemaRules(raws []string) ([]SchemaRule, error) {
+	var rules []SchemaRule
+	var errs []string
+	for _, raw := range raws {
+		rule, err := ParseSchemaRule(raw)
+		if err != nil {
+			errs = append(errs, err.Error())
+			continue
+		}
+		rules = append(rules, rule)
+	}
+	if len(errs) > 0 {
+		return nil, fmt.Errorf("schema parse errors:\n  %s", strings.Join(errs, "\n  "))
+	}
+	return rules, nil
+}
+
 // ValidateSchema checks secrets against schema rules and returns violations.
 func ValidateSchema(secrets map[string]string, rules []SchemaRule) []SchemaViolation {
 	var violations []SchemaViolation
