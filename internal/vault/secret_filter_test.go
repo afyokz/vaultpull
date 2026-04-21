@@ -47,3 +47,17 @@ func TestFilter_IncludeAndExclude(t *testing.T) {
 	out := f.Apply(input)
 	assert.Equal(t, map[string]string{"DB_HOST": "localhost"}, out)
 }
+
+func TestFilter_EmptyInput(t *testing.T) {
+	f := &Filter{Include: []string{"DB_*"}, Exclude: []string{"DB_PASSWORD"}}
+	input := map[string]string{}
+	out := f.Apply(input)
+	assert.Equal(t, map[string]string{}, out)
+}
+
+func TestFilter_ExcludeAll(t *testing.T) {
+	f := &Filter{Exclude: []string{"*"}}
+	input := map[string]string{"DB_HOST": "localhost", "API_KEY": "abc"}
+	out := f.Apply(input)
+	assert.Equal(t, map[string]string{}, out)
+}
