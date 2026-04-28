@@ -51,11 +51,24 @@ func TestSortSecrets_Empty(t *testing.T) {
 
 func TestSortSecrets_CaseInsensitive(t *testing.T) {
 	secrets := map[string]string{
-		"beta": "1",
+		"beta":  "1",
 		"ALPHA": "2",
 	}
 	result := SortSecrets(secrets, DefaultSortOption())
 	if result[0].Key != "ALPHA" {
 		t.Errorf("expected ALPHA first, got %v", result[0].Key)
+	}
+}
+
+func TestSortSecrets_SingleEntry(t *testing.T) {
+	secrets := map[string]string{
+		"ONLY": "value",
+	}
+	result := SortSecrets(secrets, DefaultSortOption())
+	if len(result) != 1 {
+		t.Fatalf("expected 1 result, got %d", len(result))
+	}
+	if result[0].Key != "ONLY" || result[0].Value != "value" {
+		t.Errorf("unexpected result: %v", result[0])
 	}
 }
